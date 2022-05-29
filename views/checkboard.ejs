@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <%- include('header.ejs') %>
+  </head>
+  <body>
+    <%- include('menu.ejs') %>
+    <div class="container">
+      <h3>게임 정보</h3>
+      <p></p>
+      <hr />
+
+      <% data.participants.map((data, index) => { %>
+      <div>
+        <strong><%= data.summonerName %></strong>
+        <br />
+        <button onclick="">spell1 : <%= data.spell1Id %></button>
+        <button>spell2 : <%= data.spell2Id %></button>
+        <br /><br />
+      </div>
+
+      <% }) %>
+    </div>
+  </body>
+</html>
