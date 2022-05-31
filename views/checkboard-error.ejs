@@ -5,8 +5,12 @@
   <body>
     <%- include('menu.ejs') %>
     <div class="container">
-      <h3><%= id %></h3>
+      <a href="/cb?id=<%- id %>">
+        <h3 onclick=""><%= id %></h3>
+      </a>
+
       해당 유저가 존재하지 않거나, 게임중이 아닙니다!
     </div>
+    <%- include('footer.ejs') %>
   </body>
 </html>

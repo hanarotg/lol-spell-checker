@@ -5,20 +5,33 @@
   <body>
     <%- include('menu.ejs') %>
     <div class="container">
-      <h3>게임 정보</h3>
-      <p></p>
+      <a href="/cb?id=<%- id %>"><h3><%= id %></h3></a>
       <hr />
 
       <% data.participants.map((data, index) => { %>
       <div>
-        <strong><%= data.summonerName %></strong>
+        <a href="/cb?id=<%- data.summonerName %>">
+          <strong><%= data.summonerName %> </strong>
+        </a>
         <br />
-        <button onclick="">spell1 : <%= data.spell1Id %></button>
+        <button
+          id="<%- index %>-<%- data.spell1Id%>"
+          onclick="changeSpellState(this)"
+        >
+          spell1 : <%= data.spell1Id %>
+        </button>
         <button>spell2 : <%= data.spell2Id %></button>
         <br /><br />
       </div>
 
       <% }) %>
     </div>
+    <%- include('footer.ejs') %>
   </body>
 </html>
+
+<script>
+  const changeSpellState = (event) => {
+    const id = document.getElementById(event.id);
+  };
+</script>
