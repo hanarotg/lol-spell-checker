@@ -5,23 +5,35 @@
   <body>
     <%- include('menu.ejs') %>
     <div class="container">
-      <a href="/cb?id=<%- id %>"><h3><%= id %></h3></a>
+      <h3><a href="/cb?id=<%- id %>"><%= id %></a>가 플레이 중인 게임</h3>
+      <p id="playtime"></p>
       <hr />
 
-      <% data.participants.map((data, index) => { %>
-      <div>
-        <a href="/cb?id=<%- data.summonerName %>">
+      <% data.participants.some((data, index) => { %>
+        <% if(index < 5) { %>
+      <div class="row" style="background-color: #D6EAF8; margin-bottom: 10px">
+        <% } else { %>
+          <div class="row" style="background-color: #FADBD8; margin-bottom: 10px">
+
+          <% } %>
+        <div class="col">
+          <% if(data.summonerName == id) { %>
           <strong><%= data.summonerName %> </strong>
-        </a>
-        <br />
-        <button
-          id="<%- index %>-<%- data.spell1Id%>"
-          onclick="changeSpellState(this)"
-        >
-          spell1 : <%= data.spell1Id %>
-        </button>
-        <button>spell2 : <%= data.spell2Id %></button>
-        <br /><br />
+          <% } else { %>
+          <a href="/cb?id=<%- data.summonerName %>">
+            <strong><%= data.summonerName %> </strong>
+          </a>
+          <% } %>
+          <br />
+        </div>
+        <div class="col row">
+          <div id="<%- index %>-0" class="col">
+            <img src="/static/spell/<%- data.spell1Id %>.png" />
+          </div>
+          <div class="col">
+            <img src="/static/spell/<%- data.spell2Id %>.png" />
+          </div>
+        </div>
       </div>
 
       <% }) %>
@@ -31,7 +43,33 @@
 </html>
 
 <script>
-  const changeSpellState = (event) => {
-    const id = document.getElementById(event.id);
+  const setPlaytime = () => {
+    const timestamp = "<%= data.gameStartTime %>"
+    const date = new Date(timestamp * 1000)
+    const playtime = document.getElementById("playtime")
+
+    let minutes = date.getMinutes()
+    let seconds = date.getSeconds()
+    
+    setInterval(() => {
+          if(seconds == 59){
+            minutes += 1
+            seconds = 0
+          }
+          else {
+            seconds += 1
+          }
+          playtime.innerHTML = `${minutes}분 ${seconds}초`
+
+    }, 1000)
+
+  }
+
+  setPlaytime()
+  const updateSpellState = () => {
+    test.childNodes;
   };
+
+  const test = document.getElementById("0-0");
+  test.addEventListener("click", updateSpellState);
 </script>
