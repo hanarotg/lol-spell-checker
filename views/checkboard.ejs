@@ -3,43 +3,90 @@
     <%- include('header.ejs') %>
   </head>
   <body>
-    <%- include('menu.ejs') %>
+    
     <div class="container">
+      <%- include('menu.ejs') %>
       <br />
       <h5><a href="/cb?id=<%- id %>"><%= id %></a> 플레이 중인 게임</h5>
       <button id="playtime" class="btn btn-light btn-sm"></button>
       <hr />
 
-      <% data.participants.some((data, index) => { %>
-        
-        <% if(index < 5) { %>
-        <div class="row" style="background-color: #D6EAF8; margin-bottom: 10px">
-        <% } else { %>
-        <div class="row" style="background-color: #FADBD8; margin-bottom: 10px">
-        <% } %>
-
-        <div class="col">
-          <%= data.championId %>
-          <% if(data.summonerName == id) { %>
-          <strong><%= data.summonerName %> </strong>
+      <div class="row">
+        <% data.participants.some((data, index) => { %>
+          
+          <% if(index == 0 || index == 5) { %>
+          <div class="col-sm-6">
+            <div style="margin-bottom: 10px">
+            <% if(index == 0) { %>
+              <p class="text-primary">Blue 팀</p>
+            <% } else { %>
+              <p class="text-danger">Red 팀</p>
+            <% } %>
+          </div>
+          <% } %> 
+          
+          <% if(index < 5) { %>
+            <div class="row" style="background-color: #d6eaf8; margin-bottom: 10px;">
           <% } else { %>
-          <a href="/cb?id=<%- data.summonerName %>" target="_blank">
-            <strong><%= data.summonerName %> </strong>
-          </a>
+          <div
+            class="row"
+            style="background-color: #fadbd8; margin-bottom: 10px;"
+          >
           <% } %>
-          <br />
-        </div>
-        <div class="col row">
-          <div id="<%- index %>-0" class="col">
-            <img src="/static/spell/<%- data.spell1Id %>.png" />
-          </div>
-          <div class="col">
-            <img src="/static/spell/<%- data.spell2Id %>.png" />
-          </div>
-        </div>
-      </div>
 
-      <% }) %>
+            <div class="col">
+              <%= data.championId %> <% if(data.summonerName == id) { %>
+              <strong><%= data.summonerName %> </strong>
+              <% } else { %>
+              <a href="/cb?id=<%- data.summonerName %>" target="_blank">
+                <strong><%= data.summonerName %> </strong>
+              </a>
+              <% } %>
+              <br />
+            </div>
+            <div class="col-auto row">
+              <div
+                id="<%- index %>-0"
+                class="col-auto"
+                style="position: relative"
+              >
+                <img src="/static/spell/<%- data.spell1Id %>.png" />
+                <div
+                  id="<%- index %>-0-container"
+                  style="
+                    z-index: 999;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    width: 64px;
+                    height: 64px;
+                    transform: translate(-50%, -50%);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <div
+                    id="<%- index %>-0-time"
+                    style="
+                      font-weight: bold;
+                      font-size: 16px;
+                      color: #ffffff;
+                      margin-bottom: 0;
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div class="col-auto">
+                <img src="/static/spell/<%- data.spell2Id %>.png" />
+              </div>
+            </div>
+          </div>
+
+          <% if(index == 4 || index == 9) { %>
+        </div>
+        <% } %> <% }) %>
+      </div>
     </div>
     <%- include('footer.ejs') %>
   </body>
@@ -47,32 +94,43 @@
 
 <script>
   const setPlaytime = () => {
-    const timestamp = "<%= data.gameLength %>"
-    const date = new Date(timestamp * 1000)
-    const playtime = document.getElementById("playtime")
+    const timestamp = "<%= data.gameLength %>";
+    const date = new Date(timestamp * 1000);
+    const playtime = document.getElementById("playtime");
 
-    let minutes = date.getMinutes()
-    let seconds = date.getSeconds()
-    
+    let minutes = date.getMinutes();
+    let seconds = date.getSeconds();
+
     setInterval(() => {
-          if(seconds == 59){
-            minutes += 1
-            seconds = 0
-          }
-          else {
-            seconds += 1
-          }
-          playtime.innerHTML = `<i class="bi bi-clock"></i> ${minutes}분 ${seconds}초`
-
-    }, 1000)
-
-  }
-
-  setPlaytime()
-  const updateSpellState = () => {
-    test.childNodes;
+      if (seconds == 59) {
+        minutes += 1;
+        seconds = 0;
+      } else {
+        seconds += 1;
+      }
+      playtime.innerHTML = `<i class="bi bi-clock"></i> ${minutes}분 ${seconds}초`;
+    }, 1000);
   };
 
-  const test = document.getElementById("0-0");
+  const test = document.getElementById("0-0-container");
+  const test_time = document.getElementById("0-0-time");
+
+  const updateSpellState = () => {
+    test.style.background = "rgba(0, 0, 0, .5)";
+    let timeLeft = 10;
+
+    const timer = setInterval(() => {
+      if (timeLeft == 0) {
+        test.style.background = "rgba(0, 0, 0, 0)";
+        clearInterval(timer);
+      }
+
+      test_time.innerHTML = `${timeLeft}초`;
+      timeLeft -= 1;
+    }, 1000);
+  };
+
   test.addEventListener("click", updateSpellState);
+
+  setPlaytime();
 </script>
