@@ -1,11 +1,13 @@
 <html>
   <head>
     <%- include('header.ejs') %>
+    <title><%= id %> - spell.team</title>
   </head>
   <body>
     
+    <%- include('menu.ejs') %>
     <div class="container">
-      <%- include('menu.ejs') %>
+      
       <br />
       <h5><a href="/cb?id=<%- id %>"><%= id %></a> 플레이 중인 게임</h5>
       <button id="playtime" class="btn btn-light btn-sm"></button>
@@ -35,7 +37,9 @@
           <% } %>
 
             <div class="col">
-              <%= data.championId %> <% if(data.summonerName == id) { %>
+              <img src="/static/champions/<%= data.championId %>.png" />
+              
+              <% if(data.summonerName == id) { %>
               <strong><%= data.summonerName %> </strong>
               <% } else { %>
               <a href="/cb?id=<%- data.summonerName %>" target="_blank">
