@@ -37,7 +37,7 @@
           <% } %>
 
             <div class="col">
-              <img src="/static/champions/<%= data.championId %>.png" />
+              <img src="/static/champions/<%= data.championId %>.png" style="width: 64px; height: 64px; border-radius: 32px;"/>
               
               <% if(data.summonerName == id) { %>
               <strong><%= data.summonerName %> </strong>
@@ -54,7 +54,7 @@
                 class="col-auto"
                 style="position: relative"
               >
-                <img src="/static/spell/<%- data.spell1Id %>.png" />
+                <img src="/static/spells/<%- data.spell1Id %>.png" />
                 <div
                   id="<%- index %>-0-container"
                   style="
@@ -82,7 +82,7 @@
                 </div>
               </div>
               <div class="col-auto">
-                <img src="/static/spell/<%- data.spell2Id %>.png" />
+                <img src="/static/spells/<%- data.spell2Id %>.png" />
               </div>
             </div>
           </div>
