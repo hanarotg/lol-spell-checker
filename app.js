@@ -1,5 +1,6 @@
 const express = require("express");
 const axios = require("axios");
+const { v4: uuidv4 } = require("uuid");
 
 require("dotenv").config();
 
@@ -17,7 +18,15 @@ app.get("/cb", async (req, res) => {
       "X-Riot-Token": `${process.env.API_KEY}`,
     },
   };
-
+  let uuid = req.query.uuid;
+  /* 이부분 js 이해도 부족, null, undefined를 구분 못해서 생기는 문제
+  if (uuid) {
+    console.log(uuid);
+  } else {
+    uuid = uuidv4();
+    console.log(uuid);
+  }
+*/
   try {
     // 개선사항 : 병렬처리하기 두 axios 는
     const summoner = await axios.get(

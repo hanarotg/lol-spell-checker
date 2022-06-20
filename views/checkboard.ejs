@@ -37,8 +37,8 @@
           <% } %>
 
             <div class="col">
-              <img src="/static/champions/<%= data.championId %>.png" style="width: 64px; height: 64px; border-radius: 32px;"/>
-              
+              <img src="/static/champions/<%= data.championId %>.png" style="width: 64px; height: 64px;"/>
+
               <% if(data.summonerName == id) { %>
               <strong><%= data.summonerName %> </strong>
               <% } else { %>
@@ -92,6 +92,15 @@
         <% } %> <% }) %>
       </div>
     </div>
+
+    <div class="container">
+      <div class="form-floating">
+        <textarea class="form-control" id="log" style="height: 100px; font-size: 0.8em;" readonly>
+        </textarea>
+        <label for="log">로그</label>
+      </div>
+    </div>
+
     <%- include('footer.ejs') %>
   </body>
 </html>
@@ -119,18 +128,23 @@
   const test = document.getElementById("0-0-container");
   const test_time = document.getElementById("0-0-time");
 
-  const updateSpellState = () => {
-    test.style.background = "rgba(0, 0, 0, .5)";
+  const updateSpellState = () => { 
+
     let timeLeft = 200;
+    test.style.background = "rgba(0, 0, 0, .5)";
+    test_time.innerHTML = `${timeLeft}`;
 
     const timer = setInterval(() => {
       if (timeLeft == 0) {
         test.style.background = "rgba(0, 0, 0, 0)";
+        test_time.innerHTML = ""
         clearInterval(timer);
+        return; // ?
       }
-
-      test_time.innerHTML = `${timeLeft}초`;
+      console.log("하")
       timeLeft -= 1;
+      test_time.innerHTML = `${timeLeft}`;
+      
     }, 1000);
   };
 
