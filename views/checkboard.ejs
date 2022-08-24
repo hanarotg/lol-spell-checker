@@ -3,6 +3,72 @@
     <%- include('header.ejs') %>
     <title><%= id %> - spell.team</title>
   </head>
+
+  <script>
+
+    window.onload = () => {
+      const test = document.getElementById("0-0-container");
+      const test_time = document.getElementById("0-0-time");
+  
+      let spellState = 0
+  
+    const setPlaytime = () => {
+      const timestamp = "<%= data.gameLength %>";
+      const date = new Date(timestamp * 1000);
+      const playtime = document.getElementById("playtime");
+  
+      let minutes = date.getMinutes();
+      let seconds = date.getSeconds();
+  
+      setInterval(() => {
+        if (seconds == 59) {
+          minutes += 1;
+          seconds = 0;
+        } else {
+          seconds += 1;
+        }
+        playtime.innerHTML = `<i class="bi bi-clock"></i> ${minutes}분 ${seconds}초`;
+      }, 1000);
+    };
+  
+    const updateSpellState = () => { 
+      let timeLeft = 200;
+      test.style.background = "rgba(0, 0, 0, .5)";
+      test_time.innerHTML = `${timeLeft}`;
+  
+      if(spellState == 0){
+        test.style.background = "rgba(0, 0, 0, 0)";
+          test_time.innerHTML = "";
+          spellState = 0;
+          return;
+      }
+  
+      spellState = 1;
+  
+      const timer = setInterval(() => {
+        if (timeLeft == 0) {
+          test.style.background = "rgba(0, 0, 0, 0)";
+          test_time.innerHTML = ""
+          clearInterval(timer);
+          spellState = 0;
+          return;
+        }
+        console.log("하")
+        timeLeft -= 1;
+        test_time.innerHTML = `${timeLeft}`;
+        
+      }, 1000);
+    };
+  
+    test.addEventListener("click", updateSpellState);
+  
+    setPlaytime();
+    
+    }
+  
+    
+  </script>
+
   <body>
     
     <%- include('menu.ejs') %>
@@ -105,50 +171,4 @@
   </body>
 </html>
 
-<script>
-  const setPlaytime = () => {
-    const timestamp = "<%= data.gameLength %>";
-    const date = new Date(timestamp * 1000);
-    const playtime = document.getElementById("playtime");
 
-    let minutes = date.getMinutes();
-    let seconds = date.getSeconds();
-
-    setInterval(() => {
-      if (seconds == 59) {
-        minutes += 1;
-        seconds = 0;
-      } else {
-        seconds += 1;
-      }
-      playtime.innerHTML = `<i class="bi bi-clock"></i> ${minutes}분 ${seconds}초`;
-    }, 1000);
-  };
-
-  const test = document.getElementById("0-0-container");
-  const test_time = document.getElementById("0-0-time");
-
-  const updateSpellState = () => { 
-
-    let timeLeft = 200;
-    test.style.background = "rgba(0, 0, 0, .5)";
-    test_time.innerHTML = `${timeLeft}`;
-
-    const timer = setInterval(() => {
-      if (timeLeft == 0) {
-        test.style.background = "rgba(0, 0, 0, 0)";
-        test_time.innerHTML = ""
-        clearInterval(timer);
-        return; // ?
-      }
-      console.log("하")
-      timeLeft -= 1;
-      test_time.innerHTML = `${timeLeft}`;
-      
-    }, 1000);
-  };
-
-  test.addEventListener("click", updateSpellState);
-
-  setPlaytime();
-</script>
