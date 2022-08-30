@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 // common settings
-const version = "12.11.1";
+const version = "12.16.1";
 const region = "en_US";
 const spells_dir = path.join(__dirname, "spells");
 const champions_dir = path.join(__dirname, "champions");

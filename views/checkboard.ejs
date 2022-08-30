@@ -12,25 +12,6 @@
   
       let spellState = 0
   
-    const setPlaytime = () => {
-      const timestamp = "<%= data.gameLength %>";
-      const date = new Date(timestamp * 1000);
-      const playtime = document.getElementById("playtime");
-  
-      let minutes = date.getMinutes();
-      let seconds = date.getSeconds();
-  
-      setInterval(() => {
-        if (seconds == 59) {
-          minutes += 1;
-          seconds = 0;
-        } else {
-          seconds += 1;
-        }
-        playtime.innerHTML = `<i class="bi bi-clock"></i> ${minutes}분 ${seconds}초`;
-      }, 1000);
-    };
-  
     const updateSpellState = () => { 
       let timeLeft = 200;
       test.style.background = "rgba(0, 0, 0, .5)";
@@ -62,8 +43,6 @@
   
     test.addEventListener("click", updateSpellState);
   
-    setPlaytime();
-    
     }
   
     
@@ -76,7 +55,6 @@
       
       <br />
       <h5><a href="/cb?id=<%- id %>"><%= id %></a> 플레이 중인 게임</h5>
-      <button id="playtime" class="btn btn-light btn-sm"></button>
       <hr />
 
       <div class="row">
