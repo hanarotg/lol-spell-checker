@@ -1,48 +1,132 @@
 <html>
   <head>
     <%- include('header.ejs') %>
-    <title><%= id %> - spell.team</title>
+    <title><%= id %> - SPELL.TEAM</title>
   </head>
 
+  <style>
+
+    .spell_container {
+      z-index: 999;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 64px;
+      height: 64px;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spell_time {
+      font-weight: bold;
+      font-size: 16px;
+      color: #ffffff;
+      margin-bottom: 0;
+    }
+
+  </style>
+  
   <script>
 
-    window.onload = () => {
-      const test = document.getElementById("0-0-container");
-      const test_time = document.getElementById("0-0-time");
-  
-      let spellState = 0
-  
-    const updateSpellState = () => { 
-      let timeLeft = 200;
-      test.style.background = "rgba(0, 0, 0, .5)";
-      test_time.innerHTML = `${timeLeft}`;
-  
-      if(spellState == 0){
-        test.style.background = "rgba(0, 0, 0, 0)";
-          test_time.innerHTML = "";
-          spellState = 0;
-          return;
-      }
-  
-      spellState = 1;
-  
-      const timer = setInterval(() => {
-        if (timeLeft == 0) {
-          test.style.background = "rgba(0, 0, 0, 0)";
-          test_time.innerHTML = ""
-          clearInterval(timer);
-          spellState = 0;
-          return;
-        }
-        console.log("하")
-        timeLeft -= 1;
-        test_time.innerHTML = `${timeLeft}`;
+    // 스펠 타이머 모음 객체
+    let spell;
+
+    // 플레이타임
+    let playtime_minutes = 0;
+    let playtime_seconds = 0;
+
+    // 게임 플레이타임 갱신
+    const updatePlaytime = function (playtime_timestamp) {
+      
+      const startdate = new Date(playtime_timestamp * 1000);
+      const date = new Date();
+
+      let diffdate = (date.getTime() - startdate.getTime()) / 1000;
+      diffdate /= 60
+            
+      /*
+      let playtime_minutes = diffdate.getMinutes();
+      let playtime_seconds = diffdate.getSeconds();
+
+      // 1초에 한번씩 갱신
+      setInterval(() => {
         
+        // 분이 바뀌는 경우
+        if(playtime_seconds == 59){
+          playtime_minutes += 1;
+          playtime_seconds = 0;
+        }
+        else {
+          playtime_seconds += 1;
+        }
+
+        console.log(playtime_minutes, playtime_seconds);
+
       }, 1000);
-    };
-  
-    test.addEventListener("click", updateSpellState);
-  
+      */
+    
+    }
+
+    // 휴지상태 스펠 타이머를 활성화합니다.
+    const startSpellTimer = function (spell_container, spell_time, spell_time_left) { 
+
+        // 로그에 스펠 상태 업데이트 기록
+        // log.value += `\n${playtime_minutes}:${playtime_seconds} - 스펠 업데이트`;
+
+          // 만약 타이머가 동작하는 상태에서 클릭 이벤트를 발생시킨 경우
+          if(spell_time.innerHTML != ""){
+            // 동작중인 타이머를 종료합니다.
+            spell_container.style.background = "rgba(0, 0, 0, 0)";
+            spell_time.innerHTML = "";
+            clearInterval(spell);
+            return;
+          }
+
+        spell_container.style.background = "rgba(0, 0, 0, .5)";
+        spell_time.innerHTML = `${spell_time_left}`;
+    
+        // 타이머 설정
+        spell = setInterval(() => {
+
+          // 타이머 종료 시
+          if (spell_time_left == 0) {
+            spell_container.style.background = "rgba(0, 0, 0, 0)";
+            spell_time.innerHTML = "";
+            clearInterval(spell);
+            return;
+          }
+          spell_time_left -= 1;
+          spell_time.innerHTML = `${spell_time_left}`;
+          
+        }, 1000);
+      };
+
+    // 진행중인 스펠 타이머를 해제합니다.
+    const stopSpellTimer = function () {
+
+    }
+
+    window.onload = () => {
+      
+      // 스펠 타이밍 객체 생성
+      
+      
+      // 각 스펠 요소에 대한 이벤트 생성
+      for(let i=0; i<10; i++){
+        let spell1_tmp = document.getElementById(`${i}-0-container`);
+        let spell1_time_tmp = document.getElementById(`${i}-0-time`);
+
+        let spell2_tmp = document.getElementById(`${i}-1-container`);
+        let spell2_time_tmp = document.getElementById(`${i}-1-time`);
+
+        spell1_tmp.addEventListener("click", startSpellTimer.bind(event, spell1_tmp, spell1_time_tmp, 180));
+        spell2_tmp.addEventListener("click", startSpellTimer.bind(event, spell2_tmp, spell2_time_tmp, 180));
+      }
+      
+      // 플레이타임 이벤트 생성
+      updatePlaytime("<%= data.gameStartTime %>");
     }
   
     
@@ -101,32 +185,26 @@
                 <img src="/static/spells/<%- data.spell1Id %>.png" />
                 <div
                   id="<%- index %>-0-container"
-                  style="
-                    z-index: 999;
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    width: 64px;
-                    height: 64px;
-                    transform: translate(-50%, -50%);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                  "
+                  class="spell_container"
                 >
                   <div
                     id="<%- index %>-0-time"
-                    style="
-                      font-weight: bold;
-                      font-size: 16px;
-                      color: #ffffff;
-                      margin-bottom: 0;
-                    "
+                    class="spell_time"
                   ></div>
                 </div>
               </div>
-              <div class="col-auto">
+              <div class="col-auto"
+              style="position: relative">
                 <img src="/static/spells/<%- data.spell2Id %>.png" />
+                <div
+                  id="<%- index %>-1-container"
+                  class="spell_container"
+                >
+                  <div
+                    id="<%- index %>-1-time"
+                    class="spell_time"
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
@@ -137,6 +215,7 @@
       </div>
     </div>
 
+    <!--
     <div class="container">
       <div class="form-floating">
         <textarea class="form-control" id="log" style="height: 100px; font-size: 0.8em;" readonly>
@@ -144,6 +223,7 @@
         <label for="log">로그 (ws)</label>
       </div>
     </div>
+    -->
 
     <%- include('footer.ejs') %>
   </body>

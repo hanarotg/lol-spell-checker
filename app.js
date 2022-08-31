@@ -40,6 +40,7 @@ app.get("/cb", async (req, res) => {
       `${process.env.LOL_SPECTATOR_URL}/${idEncrypted}`,
       config
     );
+
     res.render("checkboard", { id: decodeURI(id), data: spectator.data });
   } catch (error) {
     res.render("checkboard-error", {
