@@ -75,15 +75,6 @@
         // 로그에 스펠 상태 업데이트 기록
         // log.value += `\n${playtime_minutes}:${playtime_seconds} - 스펠 업데이트`;
 
-          // 만약 타이머가 동작하는 상태에서 클릭 이벤트를 발생시킨 경우
-          if(spell_time.innerHTML != ""){
-            // 동작중인 타이머를 종료합니다.
-            spell_container.style.background = "rgba(0, 0, 0, 0)";
-            spell_time.innerHTML = "";
-            clearInterval(spell);
-            return;
-          }
-
         spell_container.style.background = "rgba(0, 0, 0, .5)";
         spell_time.innerHTML = `${spell_time_left}`;
     
@@ -101,6 +92,11 @@
           spell_time.innerHTML = `${spell_time_left}`;
           
         }, 1000);
+
+        // click 이벤트 리스너는 add 중첩이므로 이미 존재하는 click 이벤트를 제거하고 추가해야 한다.
+        spell_container.addEventListener("click", startSpellTimer);
+        spell_container.removeEventListener("click", startSpellTimer);
+        spell_container.addEventListener("click", stopSpellTimer);
       };
 
     // 진행중인 스펠 타이머를 해제합니다.
