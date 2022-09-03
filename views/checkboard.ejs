@@ -70,11 +70,17 @@
     }
 
     // 휴지상태 스펠 타이머를 활성화합니다.
-    const startSpellTimer = function (spell_container, spell_time, spell_time_left) { 
+    const startSpellTimer = function (event) { 
 
         // 로그에 스펠 상태 업데이트 기록
         // log.value += `\n${playtime_minutes}:${playtime_seconds} - 스펠 업데이트`;
 
+        // event를 통해 객체 접근, 선언
+        let spell_container = event.currentTarget;
+        let spell_time = event.currentTarget.querySelector(".spell_time");
+        let spell_time_left = spell_container.spell_id;
+
+        // 타이머 활성 디자인으로 변경
         spell_container.style.background = "rgba(0, 0, 0, .5)";
         spell_time.innerHTML = `${spell_time_left}`;
     
@@ -94,14 +100,31 @@
         }, 1000);
 
         // click 이벤트 리스너는 add 중첩이므로 이미 존재하는 click 이벤트를 제거하고 추가해야 한다.
-        spell_container.addEventListener("click", startSpellTimer);
         spell_container.removeEventListener("click", startSpellTimer);
         spell_container.addEventListener("click", stopSpellTimer);
+
+        return;
       };
 
     // 진행중인 스펠 타이머를 해제합니다.
-    const stopSpellTimer = function () {
+    const stopSpellTimer = function (event) {
+      
+      // event를 통해 객체 접근, 선언
+      let spell_container = event.currentTarget;
+      let spell_time = event.currentTarget.querySelector(".spell_time");
+      
+      // 타이머 해제
+      clearInterval(spell);
 
+      // 타이머 비활성 디자인으로 변경
+      spell_container.style.background = "rgba(0, 0, 0, 0)";
+      spell_time.innerHTML = "";
+
+      // click 이벤트 리스너는 add 중첩이므로 이미 존재하는 click 이벤트를 제거하고 추가해야 한다.
+      spell_container.removeEventListener("click", stopSpellTimer);
+      spell_container.addEventListener("click", startSpellTimer);
+
+      return;
     }
 
     window.onload = () => {
@@ -113,12 +136,16 @@
       for(let i=0; i<10; i++){
         let spell1_tmp = document.getElementById(`${i}-0-container`);
         let spell1_time_tmp = document.getElementById(`${i}-0-time`);
+        // 해당 스펠 아이디 저장
+        spell1_tmp.spell_id = 120;
 
         let spell2_tmp = document.getElementById(`${i}-1-container`);
         let spell2_time_tmp = document.getElementById(`${i}-1-time`);
+        // 해당 스펠에 쿨타임 저장
+        spell2_tmp.spell_time_id = 180;
 
-        spell1_tmp.addEventListener("click", startSpellTimer.bind(event, spell1_tmp, spell1_time_tmp, 180));
-        spell2_tmp.addEventListener("click", startSpellTimer.bind(event, spell2_tmp, spell2_time_tmp, 180));
+        spell1_tmp.addEventListener("click", startSpellTimer);
+        spell2_tmp.addEventListener("click", startSpellTimer);
       }
       
       // 플레이타임 이벤트 생성
