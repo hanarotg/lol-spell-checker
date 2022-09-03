@@ -31,7 +31,35 @@
   <script>
 
     // 스펠 타이머 모음 객체
-    let spell;
+    /*
+      key : 타이머 객체 id, value : interval id (자동 생성)
+      ex ) {
+        3-1-time : 1,
+        2-0-time : 2,
+        6-1-time : 3
+      }
+    */
+    let spell = {};
+
+    // 스펠 아이디 - 쿨타임 1:1 객체
+    let spell_id_cooldown = {
+  '1': { name: 'Cleanse', cooldown: 210 },
+  '3': { name: 'Exhaust', cooldown: 210 },
+  '4': { name: 'Flash', cooldown: 300 },
+  '6': { name: 'Ghost', cooldown: 210 },
+  '7': { name: 'Heal', cooldown: 240 },
+  '11': { name: 'Smite', cooldown: 15 },
+  '12': { name: 'Teleport', cooldown: 360 },
+  '13': { name: 'Clarity', cooldown: 240 },
+  '14': { name: 'Ignite', cooldown: 180 },
+  '21': { name: 'Barrier', cooldown: 180 },
+  '30': { name: 'To the King!', cooldown: 10 },
+  '31': { name: 'Poro Toss', cooldown: 20 },
+  '32': { name: 'Mark', cooldown: 80 },
+  '39': { name: 'Mark', cooldown: 80 },
+  '54': { name: 'Placeholder', cooldown: 0 },
+  '55': { name: 'Placeholder and Attack-Smite', cooldown: 0 }
+};
 
     // 플레이타임
     let playtime_minutes = 0;
@@ -78,14 +106,14 @@
         // event를 통해 객체 접근, 선언
         let spell_container = event.currentTarget;
         let spell_time = event.currentTarget.querySelector(".spell_time");
-        let spell_time_left = spell_container.spell_id;
+        let spell_time_left = spell_id_cooldown[spell_container.spell_id].cooldown;
 
         // 타이머 활성 디자인으로 변경
         spell_container.style.background = "rgba(0, 0, 0, .5)";
         spell_time.innerHTML = `${spell_time_left}`;
     
         // 타이머 설정
-        spell = setInterval(() => {
+        spell[spell_time.id] = setInterval(() => {
 
           // 타이머 종료 시
           if (spell_time_left == 0) {
@@ -114,7 +142,7 @@
       let spell_time = event.currentTarget.querySelector(".spell_time");
       
       // 타이머 해제
-      clearInterval(spell);
+      clearInterval(spell[spell_time.id]);
 
       // 타이머 비활성 디자인으로 변경
       spell_container.style.background = "rgba(0, 0, 0, 0)";
@@ -134,16 +162,18 @@
       
       // 각 스펠 요소에 대한 이벤트 생성
       for(let i=0; i<10; i++){
+
+        // 스펠1
         let spell1_tmp = document.getElementById(`${i}-0-container`);
         let spell1_time_tmp = document.getElementById(`${i}-0-time`);
-        // 해당 스펠 아이디 저장
-        spell1_tmp.spell_id = 120;
+        spell1_tmp.spell_id = spell1_time_tmp.getAttribute('data-spell-id');
 
+        // 스펠2
         let spell2_tmp = document.getElementById(`${i}-1-container`);
         let spell2_time_tmp = document.getElementById(`${i}-1-time`);
-        // 해당 스펠에 쿨타임 저장
-        spell2_tmp.spell_time_id = 180;
+        spell2_tmp.spell_id = spell2_time_tmp.getAttribute('data-spell-id');
 
+        // 리스너 추가
         spell1_tmp.addEventListener("click", startSpellTimer);
         spell2_tmp.addEventListener("click", startSpellTimer);
       }
@@ -213,6 +243,7 @@
                   <div
                     id="<%- index %>-0-time"
                     class="spell_time"
+                    data-spell-id="<%- data.spell1Id %>"
                   ></div>
                 </div>
               </div>
@@ -226,6 +257,7 @@
                   <div
                     id="<%- index %>-1-time"
                     class="spell_time"
+                    data-spell-id="<%- data.spell2Id %>"
                   ></div>
                 </div>
               </div>
