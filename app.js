@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 
 const app = express();
-const port = 8000;
+const port = 3000;
 
 app.use("/static", express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
